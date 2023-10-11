@@ -61,7 +61,7 @@ namespace BookLib
             return book;
         }
 
-        public IEnumerable<Book> Get(int? maxPrice, int? minPrice, string? titleIncludes, string? orderBy)
+        public IEnumerable<Book> Get(int? maxPrice = null, int? minPrice = null, string? titleIncludes = null, string? orderBy = null)
         {
             IEnumerable<Book> filteredBooks = new List<Book>(_bookList);
             //var filteredBooks = _bookList.AsEnumerable(); //Alternativt..
@@ -129,10 +129,11 @@ namespace BookLib
 
         public Book? Update(int id, Book values)
         {
-            values.Validate();
-            Book? existingBook = GetByID(id);     //Vi har denne del for at sikre os vi ikke kan Update på en book vi måske liige har slettet
+            Book? existingBook = GetByID(id);
             if (existingBook == null)
                 return null;
+
+            values.Validate();
 
             existingBook.Title = values.Title;
             existingBook.Price = values.Price;

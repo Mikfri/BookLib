@@ -40,9 +40,9 @@ namespace BookLib
                 throw new ArgumentNullException("Title is null");
             }
 
-            if (Title.Length < 4)
+            if (Title.Length < 3)
             {
-                throw new ArgumentException($"Title must not be under {1} chars. {Title} is {Title.Length} character(s) long!");
+                throw new ArgumentException($"Title must MIN be 3 chars. {Title} is {Title.Length} character(s) long!");
             }
         }
 

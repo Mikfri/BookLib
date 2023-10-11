@@ -82,7 +82,7 @@ namespace BookLibMST
             // .Where   fungere som et filter for elementerne i listen
 
             IEnumerable<Book> booksRangeNullAnd300 = _bookRepo.Get(minPrice: null, maxPrice: 300);
-            Assert.IsTrue(booksRangeNullAnd300.All(b => b.Price <= 800));
+            Assert.IsTrue(booksRangeNullAnd300.All(b => b.Price <= 300));
 
             IEnumerable<Book> booksRange450AndNull = _bookRepo.Get(minPrice: 450, maxPrice: null);
             Assert.IsTrue(booksRange450AndNull.All(b => b.Price >= 450));
@@ -96,7 +96,7 @@ namespace BookLibMST
         public void GetByIDTest()
         {
             // Hent en bog med eksisterende ID
-            Book bookID4Python = _bookRepo.GetByID(4);
+            Book? bookID4Python = _bookRepo.GetByID(4);
             Assert.IsNotNull(bookID4Python);
             Assert.AreNotEqual("C#: Essentials", bookID4Python.Title);
             Assert.AreEqual("Python scripting", bookID4Python.Title);
@@ -108,21 +108,17 @@ namespace BookLibMST
         [TestMethod]
         public void UpdateBookTest()
         {
-            // Opret en bog, som du vil opdatere
-            Book originalBook = new Book { Title = "Original Title", Price = 100 };
-            // Bogen tilføres _bookRepo listen og får nu sit _nextID++
-            _bookRepo.Add(originalBook);
+            Book? originalBook = new Book { Title = "Original Title", Price = 100 };
+            _bookRepo.Add(originalBook);    //Bogen tilføres _bookRepo listen og får nu sit _nextID++
 
-            Book updatedBook = new Book { Title = "Updated Title", Price = 200 };
-            _bookRepo.Update(originalBook.ID, updatedBook);
+            //Book? book = _bookRepo.Update(6, new Book { Title = "", Price = 1 } );
 
-            // Tjek om de opdaterede egenskaber stemmer overens med forventningerne
+            Book? updatedBook = new Book { Title = "Updated Title", Price = 200 };
+            _bookRepo.Update(originalBook.ID, updatedBook); //Vi undgår brugen af metoden GetByID
+
             Assert.AreEqual("Updated Title", originalBook.Title);
             Assert.AreEqual(200, originalBook.Price);
-
-
         }
-
 
 
         //[TestCleanup]
