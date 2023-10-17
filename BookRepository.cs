@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -37,7 +38,7 @@ namespace BookLib
 
     public class BookRepository : IBookRepository
     {
-        public int _nextID = 1;
+        public int _nextId = 1;
         public List<Book> _bookList;
 
         public BookRepository()
@@ -45,21 +46,50 @@ namespace BookLib
             _bookList = new List<Book>
             {
                 // selvom der står ++ for første _nextID er den = 1, og ikke 2.. Sårn er det :/
-                new Book(_nextID++, "C#: Essentials", 130),
-                new Book(_nextID++, "Vue for experts", 1100),
-                new Book(_nextID++, "Java for dummies", 800),
-                new Book(_nextID++, "Python scripting", 420),
-                new Book(_nextID++, "Clients and Servers", 600),
+                new Book(_nextId++, "C#: Essentials", 130),
+                new Book(_nextId++, "Vue for experts", 1100),
+                new Book(_nextId++, "Java for dummies", 800),
+                new Book(_nextId++, "Python scripting", 420),
+                new Book(_nextId++, "Clients and Servers", 600),
             };
         }
 
-        public Book Add(Book book)
+
+        public ActionResult<Book> Add(Book book)
         {
-            book.Validate();       //svarer her til ModelState.IsValid
-            book.ID = _nextID++;
+            book.Id = _nextId++;
+
+            if (_bookList.Any(b => b.Id == book.Id))
+            {
+                return new ConflictObjectResult($"En bog med ID: {book.Id} eksisterer allerede");
+            }
+
+            if (_bookList.Any(b => b.Title == book.Title))
+            {
+                // Returnér konfliktstatus (409) med fejlmeddelelse
+                return new ConflictObjectResult($"En bog med titlen: '{book.Title}' eksisterer allerede");
+            }
+
+            book.Validate();
             _bookList.Add(book);
-            return book;
+
+            // Returnér den tilføjede bog
+            return new OkObjectResult(book);
         }
+        //public Book Add(Book book)
+        //{
+        //    book.Validate();       //svarer her til ModelState.IsValid
+        //    book.Id = _nextID++;
+
+        //    // Sørg for, at der ikke kan tilføjes to objekter med samme titel
+        //    if (_bookList.Any(b => b.Title == book.Title))
+        //    {
+        //        throw new ArgumentException($"En bog med titlen: '{book.Title}' eksisterer allerede.");
+        //    }
+
+        //    _bookList.Add(book);
+        //    return book;
+        //}
 
         public IEnumerable<Book> Get(int? maxPrice = null, int? minPrice = null, string? titleIncludes = null, string? orderBy = null)
         {
@@ -113,7 +143,7 @@ namespace BookLib
 
         public Book? GetByID(int id)
         {
-            return _bookList.Find(b => b.ID == id);
+            return _bookList.Find(b => b.Id == id);
             //return _bookList.FirstOrDefault(book => book.ID == id); // alternativt..
         }
 
@@ -133,12 +163,26 @@ namespace BookLib
             if (existingBook == null)
                 return null;
 
-            values.Validate();
-
             existingBook.Title = values.Title;
             existingBook.Price = values.Price;
+            values.Validate();
             return existingBook;
         }
+        //public bool TryUpdate(int id, Book values, out Book updatedBook)    //Alternativt.. Her tilføjes en ´bool´ (out)
+        //{
+        //    updatedBook = GetByID(id);
+
+        //    if (updatedBook == null)
+        //    {
+        //        return false;
+        //    }
+
+        //    values.Validate();
+
+        //    updatedBook.Title = values.Title;
+        //    updatedBook.Price = values.Price;
+        //    return true;
+        //}
 
     }
 }

@@ -20,13 +20,13 @@ namespace BookLib
 
     public class Book
     {
-        public int ID { get; set; }         //ISBN
+        public int Id { get; set; }         //ISBN
         public string Title { get; set; }
         public int Price { get; set; }
 
         public Book(int id, string title, int price)
         {
-            ID = id;
+            Id = id;
             Title = title;
             Price = price;
         }
@@ -60,7 +60,7 @@ namespace BookLib
 
         public override string ToString()
         {
-            return $"{ID} {Title} {Price}";
+            return $"{Id} {Title} {Price}";
         }
     }
 }

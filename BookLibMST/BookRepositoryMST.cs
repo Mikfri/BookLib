@@ -1,4 +1,5 @@
 ﻿using BookLib;
+using Microsoft.AspNetCore.Mvc;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BookLibMST
@@ -32,14 +33,20 @@ namespace BookLibMST
 
         }
 
-        [TestMethod]
         public void AddBookTest()
         {
             Book bookSummer = new() { Title = "Summerville", Price = 380 };
-            Assert.AreEqual(6, _bookRepo.Add(bookSummer).ID);   // Har den fået tildelt _nextID?
-            Assert.AreEqual(6, _bookRepo.Get().Count());        // Er der nu i alt x bøger?
+            ActionResult<Book> result = _bookRepo.Add(bookSummer);
 
-            Assert.ThrowsException<ArgumentException>(() => _bookRepo.Add(invalidBook));
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));  // Tjekker om tilføjelsen er vellykket
+            Assert.AreEqual(6, (_bookRepo.Get().SingleOrDefault(b => b.Title == "Summerville")?.Id) ?? 0);  // Tjekker om den får tildelt _nextId, når den tilføjes listen
+            Assert.AreEqual(6, _bookRepo.Get().Count());  // Er der nu i alt `x` bøger?
+
+            Book duplicatedTitle = new() { Title = "Summerville", Price = 199 };
+            ActionResult<Book> conflictedResult = _bookRepo.Add(duplicatedTitle);
+
+            Assert.IsInstanceOfType(conflictedResult, typeof(ConflictObjectResult));  // Tjekker om der opstår konflikt ved duplikeret titel
+            Assert.IsNull((conflictedResult.Value));  // Returnér null ved konflikt
         }
 
 
@@ -114,7 +121,7 @@ namespace BookLibMST
             //Book? book = _bookRepo.Update(6, new Book { Title = "", Price = 1 } );
 
             Book? updatedBook = new Book { Title = "Updated Title", Price = 200 };
-            _bookRepo.Update(originalBook.ID, updatedBook); //Vi undgår brugen af metoden GetByID
+            _bookRepo.Update(originalBook.Id, updatedBook); //Vi undgår brugen af metoden GetByID
 
             Assert.AreEqual("Updated Title", originalBook.Title);
             Assert.AreEqual(200, originalBook.Price);

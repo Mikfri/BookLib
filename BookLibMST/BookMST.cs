@@ -6,11 +6,11 @@ namespace BookLibMST
     public class BookMST
     {
         //ARRANGE
-        private Book bookOK = new Book { ID = 1, Title = "C#: Essentials", Price = 230 };
-        private Book bookInvalidPriceTooLow = new Book { ID = 2, Title = "Python for dummies", Price = -1 };
-        private Book bookInvalidPriceTooHigh = new Book { ID = 3, Title = "Python for experts", Price = 1201 };
-        private Book bookInvalidTitleNull = new Book { ID = 4, Title = null, Price = 100 };
-        private Book bookInvalidTitleShort = new Book { ID = 5, Title = "12", Price = 1200 };
+        private Book bookOK = new Book { Id = 1, Title = "C#: Essentials", Price = 230 };
+        private Book bookInvalidPriceTooLow = new Book { Id = 2, Title = "Python for dummies", Price = -1 };
+        private Book bookInvalidPriceTooHigh = new Book { Id = 3, Title = "Python for experts", Price = 1201 };
+        private Book bookInvalidTitleNull = new Book { Id = 4, Title = null, Price = 100 };
+        private Book bookInvalidTitleShort = new Book { Id = 5, Title = "12", Price = 1200 };
 
         [TestMethod]
         public void ToStringTest()
