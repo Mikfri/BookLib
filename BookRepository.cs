@@ -173,6 +173,7 @@ namespace BookLib
             values.Validate();
             return existingBook;
         }
+
         //public bool TryUpdate(int id, Book values, out Book updatedBook)    //Alternativt.. Her tilføjes en ´bool´ (out)
         //{
         //    updatedBook = GetByID(id);
