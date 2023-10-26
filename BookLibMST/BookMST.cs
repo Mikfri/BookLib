@@ -1,5 +1,9 @@
 using BookLib;
 
+/* ---: TESTs GENERELT :---
+Essencen ved tests kan koges ned til 4 dele:
+1) 2) 3) 4)*/
+
 namespace BookLibMST
 {
     [TestClass]
@@ -7,6 +11,8 @@ namespace BookLibMST
     {
         //ARRANGE
         private Book bookOK = new Book { Id = 1, Title = "C#: Essentials", Price = 230 };
+        private Book bookOKEqual = new Book { Id = 1, Title = "C#: Essentials", Price = 230 };
+
         private Book bookInvalidPriceTooLow = new Book { Id = 2, Title = "Python for dummies", Price = -1 };
         private Book bookInvalidPriceTooHigh = new Book { Id = 3, Title = "Python for experts", Price = 1201 };
         private Book bookInvalidTitleNull = new Book { Id = 4, Title = null, Price = 100 };
@@ -55,5 +61,19 @@ namespace BookLibMST
             bookOK.Price = price;
             bookOK.ValidatePrice();
         }
+
+        [TestMethod()]
+        public void EqualTest()
+        {
+            Assert.IsTrue(bookOK.Equals(bookOKEqual));
+            Assert.IsFalse(bookOK.Equals(bookInvalidTitleShort));
+        }
+
+        [TestMethod()]
+        public void HashCodeTest()
+        {
+            Assert.AreEqual(bookOK.GetHashCode(), bookOKEqual.GetHashCode());
+        }
+
     }
 }

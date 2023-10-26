@@ -57,7 +57,6 @@ namespace BookLib
 
         public ActionResult<Book> Add(Book book)
         {
-            book.Id = _nextId++;
 
             if (_bookList.Any(b => b.Id == book.Id))
             {
@@ -71,22 +70,28 @@ namespace BookLib
             }
 
             book.Validate();
+            book.Id = _nextId++;
             _bookList.Add(book);
 
             // Returnér den tilføjede bog
             return new OkObjectResult(book);
         }
+
+
+        /// <summary>
+        /// ---: OriGinal ADD, FOR EXAMN :---
+        /// .. + to bøger ikke må have samme title
+        /// </summary>
         //public Book Add(Book book)
         //{
-        //    book.Validate();       //svarer her til ModelState.IsValid
-        //    book.Id = _nextID++;
-
-        //    // Sørg for, at der ikke kan tilføjes to objekter med samme titel
+        //    // Sørger for, at der ikke kan tilføjes to objekter med samme titel
         //    if (_bookList.Any(b => b.Title == book.Title))
         //    {
         //        throw new ArgumentException($"En bog med titlen: '{book.Title}' eksisterer allerede.");
         //    }
 
+        //    book.Validate();       //svarer her til ModelState.IsValid
+        //    book.Id = _nextId++;
         //    _bookList.Add(book);
         //    return book;
         //}

@@ -10,7 +10,6 @@ namespace BookLibMST
         private IBookRepository _bookRepo;        
         private List<Book> _originalBookList;
 
-        Book invalidBook = new Book() { Title = "" };
 
         /// <summary>
         /// [TestInitialize]
@@ -94,6 +93,12 @@ namespace BookLibMST
             IEnumerable<Book> booksRange450AndNull = _bookRepo.Get(minPrice: 450, maxPrice: null);
             Assert.IsTrue(booksRange450AndNull.All(b => b.Price >= 450));
 
+            // Denne opsætning er mere tydelig/pædagogisk
+            IEnumerable<Book> booksRange140And750 = _bookRepo.Get(minPrice: 140, maxPrice: 750);
+            Assert.AreEqual(2, booksRange140And750.Count());
+            Assert.AreEqual(booksRange140And750.First().Title, "Python scripting");
+            Assert.AreEqual(booksRange140And750.Last().Title, "Clients and Servers");
+
             IEnumerable<Book> allBooks = _bookRepo.Get(minPrice: null, maxPrice: null);
             // Forvent, at antallet af returnerede bøger skal være lig med det samlede antal bøger
             Assert.AreEqual(_bookRepo.Get().Count(), allBooks.Count());
@@ -116,7 +121,7 @@ namespace BookLibMST
         public void UpdateBookTest()
         {
             Book? originalBook = new Book { Title = "Original Title", Price = 100 };
-            _bookRepo.Add(originalBook);    //Bogen tilføres _bookRepo listen og får nu sit _nextID++
+            _bookRepo.Add(originalBook);    //Bogen tilføres _bookRepo listen og får nu sit _nextId++
 
             //Book? book = _bookRepo.Update(6, new Book { Title = "", Price = 1 } );
 

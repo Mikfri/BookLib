@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace BookLib
 {
+    /// <summary>
+    /// Interfaces er for at kunne sammenarbejde for Generics
+    /// Ikke altid nødvendig hvad angår examn
+    /// </summary>
     public interface IBookRepository
     {
         ActionResult<Book> Add(Book book);

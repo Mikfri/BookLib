@@ -20,7 +20,7 @@ namespace BookLib
 
     public class Book
     {
-        public int Id { get; set; }         //ISBN
+        public int Id { get; set; }         //ISBN  //Gøres den static, ville ID ikke kunne fungere på `fler-brugere` systemer, da ID da vil genereres fra forskellige 
         public string Title { get; set; }
         public int Price { get; set; }
 
@@ -52,6 +52,8 @@ namespace BookLib
                 throw new ArgumentOutOfRangeException($"Price isn't set within the allowed range");
         }
 
+       
+
         public void Validate()
         {
             ValidateTitle();
@@ -61,6 +63,20 @@ namespace BookLib
         public override string ToString()
         {
             return $"{Id} {Title} {Price}";
+        }
+
+        // CTRL + .     override options
+        public override bool Equals(object? obj)    // Dens sammenlagte attributter sammenlignes..
+        {
+            return obj is Book book &&
+                Id == book.Id &&
+                Title == book.Title &&
+                Price == book.Price;
+        }
+
+        public override int GetHashCode()   // Dens fysiske adresse lægges sammen i memoryen.. Så to ens objekter ikke lagres 2 steder i memory
+        {
+            return HashCode.Combine(Id, Title, Price);
         }
     }
 }
